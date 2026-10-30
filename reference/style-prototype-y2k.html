@@ -1,0 +1,262 @@
+<title>Внутри Y2K</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;700&family=Press+Start+2P&family=Roboto+Condensed:wght@300;700&display=swap">
+<style>
+/* Раскладка: слева камера и чат стримерши, в центре окно Win95 с ASCII-подземельем, справа карта и пульт. Бумажный Win95 — единственная тема. */
+:root{
+  --paper:#f3efe2; --paper2:#fbf8ef; --ink:#0a1f80; --blue:#1f44c8; --pink:#e2245a; --gold:#d98a00; --green:#0e9f6e; --grey:#d4d0c8; --dim:#6b7bb8;
+  --mono:'IBM Plex Mono','Courier New',monospace; --pix:'Press Start 2P',monospace; --cond:'Roboto Condensed','Arial Narrow',sans-serif;
+  color-scheme:light;
+}
+html,body{height:100%}
+body{background:var(--paper);color:var(--ink);font:13px/1.35 var(--mono);overflow:hidden;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:8px;box-sizing:border-box;
+  background-image:repeating-linear-gradient(0deg,rgba(31,68,200,.05) 0 1px,transparent 1px 4px)}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+.app{height:100%;display:grid;grid-template-columns:minmax(170px,22%) minmax(0,1fr) minmax(150px,19%);gap:10px;min-height:0}
+.win{display:flex;flex-direction:column;min-height:0;background:var(--paper2);border:2px solid var(--blue);box-shadow:5px 5px 0 var(--blue)}
+.ttl{display:flex;align-items:center;gap:8px;padding:3px 8px;background:linear-gradient(90deg,#000080,#1084d0);color:#fff;font:700 11px var(--mono);letter-spacing:.04em;white-space:nowrap;overflow:hidden}
+.ttl .sp{flex:1}.ttl b{color:#ffd84a}
+.col{display:flex;flex-direction:column;gap:10px;min-height:0}
+/* камера */
+.cam{flex:none}
+.cam pre{margin:0;padding:4px 6px;font:700 9px/1.05 var(--mono);color:var(--ink);text-align:center;min-height:96px;white-space:pre}
+.cam .say{padding:4px 8px 6px;font-size:11px;color:var(--pink);min-height:2.6em;border-top:1px dashed var(--dim)}
+.stats{display:flex;justify-content:space-between;padding:3px 8px;font-size:11px;border-top:1px solid var(--grey)}
+.stats b{font-variant-numeric:tabular-nums}
+/* чат */
+.chat{flex:1;min-height:0}
+.log{flex:1;min-height:0;overflow:hidden;padding:4px 8px;display:flex;flex-direction:column;justify-content:flex-end;gap:1px;font-size:11px}
+.log p{margin:0;word-break:break-word}.log i{font-style:normal;font-weight:700;color:var(--blue)}.log .hot{color:var(--pink)}.log .sys{color:var(--green)}
+.vote{border-top:2px solid var(--blue);padding:6px;display:flex;flex-direction:column;gap:4px;background:#eef2ff}
+.vote h4{margin:0;font:700 11px var(--mono);color:var(--blue);display:flex;justify-content:space-between}
+.vote button{position:relative;text-align:left;font:700 11px var(--mono);color:var(--ink);background:#fff;border:2px solid;border-color:#fff #404040 #404040 #fff;padding:4px 6px;cursor:pointer;overflow:hidden}
+.vote button u{position:absolute;inset:0 auto 0 0;background:rgba(226,36,90,.16);text-decoration:none;transition:width .4s}
+.vote button span{position:relative}.vote button em{position:relative;float:right;font-style:normal;color:var(--pink)}
+/* окно игры */
+.game{min-width:0}
+.view{position:relative;flex:1;min-height:0;background:#fffdf6;overflow:hidden}
+#scr{position:absolute;inset:0;width:100%;height:100%;display:block;image-rendering:pixelated}
+.hud{display:flex;gap:12px;align-items:center;padding:4px 8px;border-top:2px solid var(--blue);font-size:11px;flex-wrap:wrap}
+.hud .hp{color:var(--pink);letter-spacing:1px}.hud b{font-variant-numeric:tabular-nums}
+.bag{display:flex;gap:3px;flex:1;justify-content:flex-end;min-width:0;overflow:hidden}
+.bag span{font:700 10px var(--mono);padding:1px 4px;border:1px solid currentColor;white-space:nowrap}
+.flash{position:absolute;inset:0;pointer-events:none;background:var(--pink);opacity:0;transition:opacity .25s}
+.flash.on{opacity:.25;transition:none}
+.over{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(251,248,239,.94);text-align:center;padding:16px}
+.over h2{margin:0;font:400 clamp(16px,3vw,26px)/1.4 var(--pix);color:var(--pink);text-shadow:3px 3px 0 var(--blue)}
+.over p{margin:0;max-width:46ch}
+.btn{font:700 12px var(--mono);color:#fff;background:var(--blue);border:2px solid;border-color:#7c95ff #0a1f80 #0a1f80 #7c95ff;padding:7px 14px;cursor:pointer}
+.btn:focus-visible,.pad button:focus-visible,.vote button:focus-visible{outline:2px dashed var(--pink);outline-offset:2px}
+/* карта и пульт */
+#map{width:100%;aspect-ratio:1;display:block;background:#fffdf6;image-rendering:pixelated}
+.info{padding:5px 8px;font-size:11px;display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--grey)}
+.pad{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;padding:8px}
+.pad button{font:700 16px var(--mono);color:var(--ink);background:var(--grey);border:2px solid;border-color:#fff #404040 #404040 #fff;padding:0;min-height:44px;cursor:pointer;touch-action:manipulation;user-select:none}
+.pad button:active{border-color:#404040 #fff #fff #404040}
+.pad .atk{grid-column:1/-1;background:var(--pink);color:#fff;font-size:13px}
+.keys{padding:0 8px 6px;font-size:10px;color:var(--dim)}
+/* узкие экраны */
+@media (max-width:760px) and (orientation:portrait){
+  body{overflow:auto}.app{grid-template-columns:1fr;grid-template-rows:auto 52vh auto;height:auto}
+  .col.left{order:3}.chat{max-height:220px}.col.right{order:2;flex-direction:row}.col.right .win{flex:1}
+}
+@media (max-height:440px){.cam pre{font-size:7px;min-height:70px}.pad button{min-height:38px}.keys{display:none}}
+@media (prefers-reduced-motion:reduce){.vote button u{transition:none}}
+</style>
+
+<div class="app">
+  <div class="col left">
+    <section class="win cam">
+      <div class="ttl">● LIVE <span class="sp"></span><b id="viewers">120</b>&nbsp;зрит.</div>
+      <pre id="face" aria-label="Стримерша"></pre>
+      <div class="say" id="say">«Чат, я внутри компа! Это норм вообще?»</div>
+      <div class="stats"><span>подписчики <b id="subs">0</b></span><span>донаты <b id="dons">◈ 0</b></span></div>
+    </section>
+    <section class="win chat">
+      <div class="ttl">ЧАТ</div>
+      <div class="log" id="log" aria-live="polite"></div>
+      <div class="vote" id="vote" hidden></div>
+    </section>
+  </div>
+
+  <section class="win game">
+    <div class="ttl">y2k_dungeon.exe <span class="sp"></span>сид <b id="seed">—</b> · этаж <b id="floor">1</b>/3</div>
+    <div class="view" id="view">
+      <canvas id="scr" aria-label="Вид от первого лица"></canvas>
+      <div class="flash" id="flash"></div>
+      <div class="over" id="over">
+        <h2>ВНУТРИ Y2K</h2>
+        <p>Стримерша провалилась внутрь своего компьютера. Пройди 3 этажа памяти, собери гаджеты и победи Миллениум-баг — а чат будет смотреть, голосовать и мешать.</p>
+        <button class="btn" id="startBtn">▶ Начать эфир</button>
+        <p style="font-size:11px;color:var(--dim)">Ходьба: стрелки / WASD или кнопки справа · удар: пробел</p>
+      </div>
+    </div>
+    <div class="hud"><span>сигнал <b class="hp" id="hp">■■■■■</b></span><span>урон <b id="dmg">1</b></span><span>вирусы <b id="kills">0</b></span><div class="bag" id="bag"></div></div>
+  </section>
+
+  <div class="col right">
+    <section class="win">
+      <div class="ttl">map.bmp</div>
+      <canvas id="map" width="105" height="105" aria-label="Карта этажа"></canvas>
+      <div class="info"><span id="goal">Найди порт ▶ на следующий этаж</span><span id="near">—</span></div>
+    </section>
+    <section class="win">
+      <div class="ttl">пульт</div>
+      <div class="pad">
+        <button id="bL" aria-label="Повернуть налево">↶</button><button id="bF" aria-label="Вперёд">↑</button><button id="bR" aria-label="Повернуть направо">↷</button>
+        <button id="bSL" aria-label="Шаг влево">◂</button><button id="bB" aria-label="Назад">↓</button><button id="bSR" aria-label="Шаг вправо">▸</button>
+        <button class="atk" id="bA">⚔ УДАР / ВЗЯТЬ</button>
+      </div>
+      <div class="keys">WASD / стрелки · Q E — шаг вбок · пробел — удар</div>
+    </section>
+  </div>
+</div>
+
+<script>
+(()=>{
+const $=id=>document.getElementById(id);
+/* ---------- случайность по сиду ---------- */
+function rngOf(s){let h=2166136261;for(const c of s){h^=c.charCodeAt(0);h=Math.imul(h,16777619)}let a=h>>>0||1;return()=>{a=a+0x6D2B79F5|0;let t=Math.imul(a^a>>>15,1|a);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+const ABC='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';const newSeed=()=>Array.from({length:5},()=>ABC[Math.floor(Math.random()*ABC.length)]).join('');
+let R=Math.random;const ri=n=>Math.floor(R()*n);const pick=a=>a[Math.floor(Math.random()*a.length)];
+/* ---------- данные ---------- */
+const GADGETS=['Стразик','Кассета','Пейджер','Тамагочи','CD-плеер','Раскладушка','Карманная консоль','MP3-плеер','DVD-диск','Нетбук','Веб-камера','Wi-Fi роутер'];
+const RARS=[{n:'обычн.',c:'#6b7bb8',v:15},{n:'редк.',c:'#1f44c8',v:30},{n:'эпич.',c:'#8b3fd9',v:55},{n:'легенд.',c:'#d98a00',v:100}];
+const NICKS=['Glitter_Girl','Kiber_Tim','~*Ksu*~','NeoHacker','dj_Vasya','olds_2001','pager_girl','Tamago4i','Millenium99','nya_nya','ModemMan'];
+const ENEMIES={virus:{hp:3,art:[" .--. ","(>__<)"," /||\\ "],c:'#e2245a',n:'вирус'},worm:{hp:2,art:["~~O~~"," ~~~ "],c:'#0e9f6e',n:'червь'},
+  boss:{hp:14,art:["  .-(@@)-.  "," /|  ||  |\\ ","/ | Y2K | \\","  '-.__.-'  "],c:'#e2245a',n:'Миллениум-баг'}};
+const FACES={idle:['O','O','_'],wow:['@','@','O'],hurt:['>','<','~'],happy:['^','^','w'],cool:['=','=','_']};
+/* ---------- состояние ---------- */
+let G=null;
+const W=21,H=21;
+function genFloor(f){const m=Array.from({length:H},()=>Array(W).fill(1));const rooms=[];
+  for(let k=0;k<40&&rooms.length<7;k++){const w=3+ri(4),h=3+ri(4),x=1+ri(W-w-2),y=1+ri(H-h-2);if(rooms.some(r=>x<r.x+r.w+1&&x+w+1>r.x&&y<r.y+r.h+1&&y+h+1>r.y))continue;rooms.push({x,y,w,h});for(let j=y;j<y+h;j++)for(let i=x;i<x+w;i++)m[j][i]=0}
+  for(let k=1;k<rooms.length;k++){const a=rooms[k-1],b=rooms[k];let x=a.x+(a.w>>1),y=a.y+(a.h>>1);const tx=b.x+(b.w>>1),ty=b.y+(b.h>>1);while(x!==tx){m[y][x]=0;x+=Math.sign(tx-x)}while(y!==ty){m[y][x]=0;y+=Math.sign(ty-y)}}
+  // битые стены — розовые
+  for(let j=0;j<H;j++)for(let i=0;i<W;i++)if(m[j][i]===1&&R()<.06)m[j][i]=2;
+  const st=rooms[0],ex=rooms[rooms.length-1];const exit={x:ex.x+ex.w-1,y:ex.y+ex.h-1};
+  const free=[];rooms.slice(1).forEach(r=>{for(let j=r.y;j<r.y+r.h;j++)for(let i=r.x;i<r.x+r.w;i++)if(!(i===exit.x&&j===exit.y))free.push([i,j])});
+  const take=()=>free.splice(ri(free.length),1)[0];const mobs=[],loot=[];
+  for(let k=0;k<3+f*2&&free.length;k++){const [x,y]=take();const t=R()<.4?'worm':'virus';mobs.push({x,y,t,hp:ENEMIES[t].hp+f-1,id:k})}
+  if(f===3){const [x,y]=[exit.x,exit.y-1>=ex.y?exit.y-1:exit.y];mobs.push({x:ex.x+(ex.w>>1),y:ex.y+(ex.h>>1),t:'boss',hp:ENEMIES.boss.hp,id:99,boss:1})}
+  for(let k=0;k<5&&free.length;k++){const [x,y]=take();const r=R();loot.push({x,y,g:GADGETS[ri(GADGETS.length)],r:r<.05?3:r<.18?2:r<.45?1:0})}
+  return{m,px:st.x+(st.w>>1),py:st.y+(st.h>>1),exit,mobs,loot,seen:Array.from({length:H},()=>Array(W).fill(0))}}
+function newGame(seed){R=rngOf(seed);G={seed,floor:1,hp:5,max:5,dmg:1,buffT:0,kills:0,viewers:120,subs:0,dons:0,bag:[],dir:0,ang:0,anim:null,over:false,shield:0,mapAll:false};
+  loadFloor(1);$('seed').textContent=seed;$('over').hidden=true;log('sys','Эфир начался · сид '+seed);say('Чат, я внутри компа! Это норм вообще?','wow');nextVote=Date.now()+15000;ui();draw()}
+function loadFloor(f){const F=genFloor(f);G.F=F;G.floor=f;G.x=F.px;G.y=F.py;G.dir=0;G.ang=0;G.fx=G.x+.5;G.fy=G.y+.5;
+  // смотрим в открытую сторону
+  for(let d=0;d<4;d++){const [dx,dy]=DIRS[d];if(F.m[G.y+dy]&&F.m[G.y+dy][G.x+dx]===0){G.dir=d;G.ang=d*Math.PI/2;break}}
+  reveal();$('floor').textContent=f;$('goal').textContent=f<3?'Найди порт ▶ на следующий этаж':'Победи Миллениум-баг';}
+const DIRS=[[1,0],[0,1],[-1,0],[0,-1]];
+/* ---------- рендер ASCII-рейкастом ---------- */
+const cv=$('scr'),cx=cv.getContext('2d');let CW=7,CH=12,COLS=90,ROWS=34,zbuf=[];
+function resize(){const r=cv.getBoundingClientRect(),dpr=Math.min(2,window.devicePixelRatio||1);cv.width=Math.round(r.width*dpr);cv.height=Math.round(r.height*dpr);
+  CH=Math.max(10,Math.round(cv.height/Math.max(24,Math.min(40,r.height/11))));CW=Math.round(CH*.6);COLS=Math.floor(cv.width/CW);ROWS=Math.floor(cv.height/CH);cx.font=`700 ${CH}px 'IBM Plex Mono',monospace`;cx.textBaseline='top';draw()}
+const SHADE='#%*+=~-:.';
+function wallCol(t,dist,side){const k=Math.min(1,dist/9);const L=side?52:40;if(t===2)return`hsl(343,${78-k*40}%,${L+k*38}%)`;if(t===3)return`hsl(40,95%,${L+k*35}%)`;return`hsl(228,${73-k*45}%,${L-6+k*44}%)`}
+function draw(){if(!G){cx.fillStyle='#fffdf6';cx.fillRect(0,0,cv.width,cv.height);return}const F=G.F,m=F.m;cx.fillStyle='#fffdf6';cx.fillRect(0,0,cv.width,cv.height);
+  const ox=G.fx,oy=G.fy,dx=Math.cos(G.ang),dy=Math.sin(G.ang),plx=-dy*.66,ply=dx*.66;const half=ROWS/2;zbuf=new Array(COLS);let prevTile=null;
+  for(let c=0;c<COLS;c++){const camX=2*c/COLS-1,rx=dx+plx*camX,ry=dy+ply*camX;let mx=Math.floor(ox),my=Math.floor(oy);const ddx=Math.abs(1/rx),ddy=Math.abs(1/ry);
+    let sx,sy,sdx,sdy;if(rx<0){sx=-1;sdx=(ox-mx)*ddx}else{sx=1;sdx=(mx+1-ox)*ddx}if(ry<0){sy=-1;sdy=(oy-my)*ddy}else{sy=1;sdy=(my+1-oy)*ddy}
+    let side=0,t=1,guard=0;while(guard++<64){if(sdx<sdy){sdx+=ddx;mx+=sx;side=0}else{sdy+=ddy;my+=sy;side=1}t=(m[my]&&m[my][mx]!==undefined)?m[my][mx]:1;if(mx===F.exit.x&&my===F.exit.y)t=t||0;if(t!==0)break}
+    const dist=Math.max(.05,side?sdy-ddy:sdx-ddx);zbuf[c]=dist;const lhF=ROWS/dist,lh=Math.min(ROWS*.94,lhF);const top=Math.floor(half-lh/2),bot=Math.ceil(half+lh/2);
+    let wx=side?ox+dist*rx:oy+dist*ry;wx-=Math.floor(wx);const edge=wx<.06||wx>.94;const tileKey=mx+','+my;const border=prevTile!==null&&prevTile!==tileKey;prevTile=tileKey;
+    const sh=SHADE[Math.min(SHADE.length-1,Math.floor(dist*1.1))];
+    for(let r=0;r<ROWS;r++){let ch,col;
+      if(r<top){const d=half/(half-r+.001);ch=(r+c*3)%7===0&&d<6?'\'':(r%2===0&&c%4===0?'.':' ');col='#b8c4ee'}
+      else if(r>bot){const d=half/(r-half+.001);const fx=ox+d*rx,fy=oy+d*ry;const ex=Math.floor(fx)===F.exit.x&&Math.floor(fy)===F.exit.y;
+        ch=ex?(Math.floor(fx*4+fy*4)%2?'▓':'░'):((Math.floor(fx*2)+Math.floor(fy*2))%2?'.':(d<3?'_':' '));col=ex?'#0e9f6e':`hsl(228,40%,${55+Math.min(35,d*5)}%)`}
+      else{const v=(r-(half-lhF/2))/lhF,by=Math.floor(v*6),mort=(v*6)%1<.13,vx=(wx*3+(by%2)*.5)%1<.07;ch=(edge||border)&&dist<8?'|':(r===top||r===bot)?'=':(dist<4&&mort)?'-':(dist<4&&vx)?':':(t===2&&(r+c)%5===0?'X':sh);if(t===2&&dist<6&&(r*7+c)%9===0)ch=pick(['#','%','?']);col=wallCol(t,dist,side)}
+      if(ch!==' '){cx.fillStyle=col;cx.fillText(ch,c*CW,r*CH)}}}
+  // спрайты: порт, лут, враги — от дальних к ближним
+  const spr=[];F.loot.forEach(l=>spr.push({x:l.x+.5,y:l.y+.5,art:['[◈]'],c:RARS[l.r].c,loot:1,r:l.r}));
+  F.mobs.forEach(e=>spr.push({x:e.x+.5,y:e.y+.5,art:ENEMIES[e.t].art,c:G.hitId===e.id&&Date.now()-G.hitT<180?'#000':ENEMIES[e.t].c,mob:e}));
+  spr.push({x:F.exit.x+.5,y:F.exit.y+.5,art:[' .---. ','| ▶▶ |'," '---' "],c:'#0e9f6e',exit:1});
+  spr.forEach(s=>s.d=(s.x-ox)**2+(s.y-oy)**2);spr.sort((a,b)=>b.d-a.d);
+  const inv=1/(plx*dy-dx*ply);
+  for(const s of spr){const sx=s.x-ox,sy=s.y-oy;const tx=inv*(dy*sx-dx*sy),ty=inv*(-ply*sx+plx*sy);if(ty<=.2)continue;
+    const scx=Math.floor((COLS/2)*(1+tx/ty));const size=ROWS/ty;const art=s.art;const aw=Math.max(...art.map(l=>l.length)),ah=art.length;
+    const sc=Math.max(.35,Math.min(3,size/(ah*2.4)));const cw=CW*sc,chh=CH*sc;const fh=ah*chh;const baseY=(ROWS/2)*CH+(size*CH)/2*.55;const y0=baseY-fh;
+    cx.save();cx.font=`700 ${Math.max(6,CH*sc)}px 'IBM Plex Mono',monospace`;cx.fillStyle=s.c;
+    art.forEach((ln,j)=>{for(let i=0;i<ln.length;i++){const ch=ln[i];if(ch===' ')continue;const px=scx*CW+(i-aw/2)*cw;const col=Math.floor(px/CW);if(col<0||col>=COLS||zbuf[col]<ty)continue;cx.fillText(ch,px,y0+j*chh)}});
+    if(s.mob&&ty<4){const e=s.mob,mx=ENEMIES[e.t].hp+(e.boss?0:G.floor-1);cx.font=`700 ${CH}px 'IBM Plex Mono',monospace`;cx.fillStyle='#e2245a';const bar='♥'.repeat(Math.max(0,e.hp));const px=scx*CW-bar.length*CW/2;const col=Math.floor((scx));if(col>=0&&col<COLS&&zbuf[col]>=ty)cx.fillText(bar,px,y0-CH*1.2)}
+    cx.restore()}
+  // прицел
+  cx.fillStyle='rgba(31,68,200,.55)';cx.fillText('+',Math.floor(COLS/2)*CW,Math.floor(ROWS/2)*CH);
+  drawMap()}
+const mc=$('map'),mx2=mc.getContext('2d');
+function drawMap(){const F=G.F,s=5;mx2.fillStyle='#fffdf6';mx2.fillRect(0,0,mc.width,mc.height);for(let j=0;j<H;j++)for(let i=0;i<W;i++){if(!F.seen[j][i]&&!G.mapAll)continue;const t=F.m[j][i];mx2.fillStyle=t===0?'#e7ecfb':t===2?'#f39ab2':'#1f44c8';mx2.fillRect(i*s,j*s,s,s)}
+  if(F.seen[F.exit.y][F.exit.x]||G.mapAll){mx2.fillStyle='#0e9f6e';mx2.fillRect(F.exit.x*s,F.exit.y*s,s,s)}
+  F.loot.forEach(l=>{if(F.seen[l.y][l.x]){mx2.fillStyle=RARS[l.r].c;mx2.fillRect(l.x*s+1,l.y*s+1,3,3)}});
+  F.mobs.forEach(e=>{if(F.seen[e.y][e.x]){mx2.fillStyle='#e2245a';mx2.fillRect(e.x*s+1,e.y*s+1,3,3)}});
+  mx2.fillStyle='#d98a00';mx2.fillRect(G.x*s,G.y*s,s,s);const [dx,dy]=DIRS[G.dir];mx2.fillStyle='#000';mx2.fillRect(G.x*s+2+dx*2,G.y*s+2+dy*2,1,1)}
+function reveal(){const F=G.F;for(let j=-3;j<=3;j++)for(let i=-3;i<=3;i++){const x=G.x+i,y=G.y+j;if(x>=0&&y>=0&&x<W&&y<H)F.seen[y][x]=1}}
+/* ---------- анимация шагов и поворотов ---------- */
+function animate(toX,toY,toA,done){const fx0=G.fx,fy0=G.fy,a0=G.ang,t0=performance.now(),dur=matchMedia('(prefers-reduced-motion:reduce)').matches?1:150;G.anim=1;
+  (function st(now){const k=Math.min(1,(now-t0)/dur),e=k<.5?2*k*k:1-Math.pow(-2*k+2,2)/2;G.fx=fx0+(toX-fx0)*e;G.fy=fy0+(toY-fy0)*e;G.ang=a0+(toA-a0)*e;draw();if(k<1)requestAnimationFrame(st);else{G.anim=null;G.ang=((toA%(Math.PI*2))+Math.PI*2)%(Math.PI*2);done&&done()}})(t0)}
+const free=(x,y)=>G.F.m[y]&&G.F.m[y][x]===0&&!G.F.mobs.some(e=>e.x===x&&e.y===y);
+function move(rel){if(!G||G.over||G.anim)return;const d=(G.dir+rel)%4,[dx,dy]=DIRS[d],nx=G.x+dx,ny=G.y+dy;if(!free(nx,ny)){bump();return}G.x=nx;G.y=ny;reveal();
+  animate(nx+.5,ny+.5,G.ang,()=>{afterStep()})}
+function rot(s){if(!G||G.over||G.anim)return;G.dir=(G.dir+s+4)%4;let to=G.ang+s*Math.PI/2;animate(G.fx,G.fy,to,()=>{draw();nearInfo()})}
+function bump(){beep(90,.05,'square',.05);shakeV()}
+function afterStep(){const F=G.F;const li=F.loot.findIndex(l=>l.x===G.x&&l.y===G.y);if(li>=0){const l=F.loot.splice(li,1)[0];G.bag.push(l);const v=RARS[l.r].v;G.viewers+=v;G.dons+=v*3;say(pick(['Чат, смотрите! '+l.g+'!','Ого, '+l.g+'! Беру!','Это же '+l.g+'!!']),'happy');
+    log('sys',`Найдено: ${RARS[l.r].n} ${l.g} · +${v} зрителей`);for(let i=0;i<2+l.r;i++)setTimeout(()=>chat(pick(['хочу такой же','ВАУ',l.g+'!!!','лут!!','ностальгия'])),200+i*250);beep(880,.06,'square',.05);beep(1320,.08,'square',.04,.07);
+    if(l.r>=2){G.dmg+=1;log('sys','Редкий гаджет: урон +1')}}
+  if(G.x===F.exit.x&&G.y===F.exit.y){if(G.floor<3){G.viewers+=60;log('sys',`Этаж ${G.floor} пройден`);say('Портал! Дальше — глубже в память!','cool');beep(523,.1,'triangle',.06);beep(784,.12,'triangle',.06,.1);setTimeout(()=>{loadFloor(G.floor+1);ui();draw()},250);return}
+    else if(F.mobs.some(e=>e.boss)){say('Сначала баг! Иначе он сожрёт эфир!','hurt')}}
+  enemiesTurn();ui();nearInfo()}
+/* ---------- бой ---------- */
+function facing(){const [dx,dy]=DIRS[G.dir];return G.F.mobs.find(e=>e.x===G.x+dx&&e.y===G.y+dy)}
+function attack(){if(!G||G.over||G.anim)return;const e=facing();if(!e){const [dx,dy]=DIRS[G.dir];say(pick(['Мимо! Там пусто','Кого бить-то?']),'idle');enemiesTurn();ui();return}
+  const dmg=G.dmg+(G.buffT>0?1:0);e.hp-=dmg;G.hitId=e.id;G.hitT=Date.now();beep(220,.05,'sawtooth',.06);shakeV();
+  if(e.hp<=0){G.F.mobs=G.F.mobs.filter(x=>x!==e);G.kills++;G.viewers+=e.boss?300:40;G.subs+=e.boss?50:5;log('sys',`${ENEMIES[e.t].n} удалён`);chat(pick(['GG','изи','бан вирусу','KEKW','красава']));
+    if(e.boss){win();return}say(pick(['Минус вирус!','Получай, глюк!','Антивирус — это я!']),'happy');beep(660,.06,'square',.05);beep(990,.08,'square',.04,.06)}
+  else say(pick(['Ещё разок!','Он крепкий!','Держись, чат!']),'cool');
+  enemiesTurn();ui();draw()}
+function enemiesTurn(){if(G.buffT>0)G.buffT--;const F=G.F;for(const e of F.mobs){const ddx=G.x-e.x,ddy=G.y-e.y,dist=Math.abs(ddx)+Math.abs(ddy);
+    if(dist===1){const ch=e.boss?.75:.45;if(R()<ch){hurt(e.boss?2:1,ENEMIES[e.t].n)}continue}
+    if(dist<=6&&R()<.7){const opts=[[Math.sign(ddx),0],[0,Math.sign(ddy)]].filter(([a,b])=>(a||b)&&free(e.x+a,e.y+b)&&!(e.x+a===G.x&&e.y+b===G.y));if(opts.length){const [a,b]=opts[ri(opts.length)];e.x+=a;e.y+=b}}}
+  if(F.mobs.some(e=>Math.abs(G.x-e.x)+Math.abs(G.y-e.y)<=2)&&R()<.25)chat(pick(['сзади!!','он рядом','бей его','осторожно!']),1);draw()}
+function hurt(n,who){if(G.shield>0){G.shield--;log('sys','Щит чата поглотил удар');return}G.hp-=n;G.viewers=Math.max(0,G.viewers-15*n);const f=$('flash');f.classList.add('on');setTimeout(()=>f.classList.remove('on'),60);beep(110,.12,'sawtooth',.07);
+  say(pick(['Ай! '+who+' кусается!','Сигнал падает!','Чат, спасайте!']),'hurt');if(G.hp<=0)lose()}
+function shakeV(){const v=$('view');if(matchMedia('(prefers-reduced-motion:reduce)').matches)return;v.animate([{transform:'translate(0,0)'},{transform:'translate(-3px,1px)'},{transform:'translate(2px,-1px)'},{transform:'translate(0,0)'}],{duration:140})}
+function lose(){G.over=true;endScreen('ЭФИР УПАЛ',`Сигнал пропал на этаже ${G.floor}. Зрителей в пике: ${G.viewers} · гаджетов: ${G.bag.length} · вирусов: ${G.kills}.`)}
+function win(){G.over=true;G.subs+=100;say('МЫ ПОБЕДИЛИ БАГ! Чат, вы лучшие!','happy');for(let i=0;i<8;i++)setTimeout(()=>chat(pick(['ЛЕГЕНДА','GG WP','8888888','баг повержен','ПОБЕДА']),1),i*150);
+  endScreen('ЭФИР ПОКОРЁН',`Миллениум-баг удалён! Зрителей: ${G.viewers} · подписчиков +${G.subs} · гаджетов: ${G.bag.length} · вирусов: ${G.kills}.`)}
+function endScreen(t,p){const o=$('over');o.innerHTML=`<h2>${t}</h2><p>${p}</p><button class="btn" id="again">▶ Новый эфир (новый сид)</button><button class="btn" id="same" style="background:#7c3aed">↻ Этот же сид ${G.seed}</button>`;o.hidden=false;
+  $('again').onclick=()=>newGame(newSeed());$('same').onclick=()=>newGame(G.seed)}
+/* ---------- чат и голосования ---------- */
+const VOTES=[[{n:'Бафф урона',f:()=>{G.buffT=8;log('sys','Чат: +1 урон на 8 ходов')}},{n:'Лечение',f:()=>{G.hp=Math.min(G.max,G.hp+2);log('sys','Чат: +2 сигнала')}},{n:'Показать карту',f:()=>{G.mapAll=true;log('sys','Чат: карта этажа открыта')}}],
+  [{n:'Щит на 2 удара',f:()=>{G.shield=2;log('sys','Чат: щит на 2 удара')}},{n:'Донат-взрыв',f:()=>{G.dons+=200;G.viewers+=50;log('sys','Чат: донаты!')}},{n:'Позвать рейд',f:()=>{G.viewers+=120;log('sys','Рейд: +120 зрителей')}}]];
+let nextVote=0,voteT=null;
+function startVote(){if(!G||G.over)return;const set=VOTES[ri(VOTES.length)];let pc=set.map(()=>Math.random()+.2);const end=Date.now()+12000;const box=$('vote');box.hidden=false;
+  const render=()=>{const s=pc.reduce((a,b)=>a+b,0);const left=Math.max(0,Math.ceil((end-Date.now())/1000));box.innerHTML=`<h4><span>ЧАТ ГОЛОСУЕТ</span><span>${left} с</span></h4>`+set.map((o,i)=>{const p=Math.round(pc[i]/s*100);return`<button data-v="${i}"><u style="width:${p}%"></u><span>${o.n}</span><em>${p}%</em></button>`}).join('');
+    box.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>finish(+b.dataset.v,true))};
+  const finish=(i,me)=>{clearInterval(voteT);box.hidden=true;set[i].f();chat(me?'стримерша выбрала: '+set[i].n:'чат решил: '+set[i].n,1);G.viewers+=me?10:0;beep(784,.06,'triangle',.05);ui();draw();nextVote=Date.now()+25000+ri(15000)};
+  render();voteT=setInterval(()=>{pc=pc.map(v=>v+Math.random()*.3);if(Date.now()>=end){const i=pc.indexOf(Math.max(...pc));finish(i,false)}else render()},700)}
+function chat(t,hot){log(hot?'hot':'',t,pick(NICKS))}
+function log(cls,t,nick){const L=$('log');const p=document.createElement('p');if(cls==='sys'){p.className='sys';p.textContent='» '+t}else{p.innerHTML=`<i>${nick}:</i> `;p.append(t);if(cls)p.className=cls}L.append(p);while(L.children.length>40)L.firstChild.remove()}
+function say(t,face){$('say').textContent='«'+t+'»';setFace(face||'idle')}
+function setFace(f){const e=FACES[f]||FACES.idle;$('face').textContent=["      .-~~~~~~~-.","    .'/ / /  \\ \\ \\'.","   / / / /    \\ \\ \\ \\",` [=]|  ${e[0]}      ${e[1]}  |[=]`," [=]|            |[=]",`    \\     ${e[2]}      /`,"     '.________.'","      /|  ||  |\\"].join('\n')}
+function nearInfo(){if(!G)return;const e=facing();const F=G.F;const d=Math.abs(F.exit.x-G.x)+Math.abs(F.exit.y-G.y);$('near').textContent=e?`Перед тобой: ${ENEMIES[e.t].n} ♥${e.hp}`:d<=3?'Порт совсем рядом':'—'}
+function ui(){if(!G)return;$('viewers').textContent=G.viewers;$('subs').textContent=G.subs;$('dons').textContent='◈ '+G.dons;$('hp').textContent='■'.repeat(Math.max(0,G.hp))+'□'.repeat(Math.max(0,G.max-G.hp));
+  $('dmg').textContent=G.dmg+(G.buffT>0?'+1':'')+(G.shield?` · щит ${G.shield}`:'');$('kills').textContent=G.kills;$('bag').innerHTML=G.bag.slice(-6).map(l=>`<span style="color:${RARS[l.r].c}">${l.g}</span>`).join('');nearInfo()}
+/* ---------- звук ---------- */
+let AC=null;function beep(f,d,type,vol,delay){try{if(!AC)return;const t=AC.currentTime+(delay||0),o=AC.createOscillator(),g=AC.createGain();o.type=type||'square';o.frequency.value=f;g.gain.setValueAtTime(vol||.05,t);g.gain.exponentialRampToValueAtTime(.0001,t+d);o.connect(g).connect(AC.destination);o.start(t);o.stop(t+d+.02)}catch(e){}}
+/* ---------- фон: чат живёт, зрители утекают без действия ---------- */
+setInterval(()=>{if(!G||G.over)return;if(Math.random()<.5)chat(pick(['кто тоже не спит?','это вообще законно','олды тут','где выход','стрим года','лагает?','ахах','<3','go go go','налево!!','направо!!','вперёд!']));
+  if(Date.now()>nextVote&&$('vote').hidden)startVote();if(Math.random()<.3){G.viewers=Math.max(0,G.viewers-2);ui()}},2200);
+setInterval(()=>{if(G&&!G.over&&!G.anim&&Math.random()<.5)draw()},420);
+/* ---------- управление ---------- */
+const act={bF:()=>move(0),bB:()=>move(2),bL:()=>rot(-1),bR:()=>rot(1),bSL:()=>move(3),bSR:()=>move(1),bA:()=>attack()};
+Object.entries(act).forEach(([id,f])=>$(id).addEventListener('click',e=>{e.preventDefault();f()}));
+addEventListener('keydown',e=>{const k=e.key.toLowerCase();const m={arrowup:'bF',w:'bF',arrowdown:'bB',s:'bB',arrowleft:'bL',a:'bL',arrowright:'bR',d:'bR',q:'bSL',e:'bSR',' ':'bA'}[k];if(m&&G&&$('over').hidden){e.preventDefault();act[m]()}});
+// свайпы по окну игры
+let sx=0,sy=0;$('view').addEventListener('pointerdown',e=>{sx=e.clientX;sy=e.clientY});$('view').addEventListener('pointerup',e=>{if(!G||!$('over').hidden)return;const dx=e.clientX-sx,dy=e.clientY-sy;if(Math.max(Math.abs(dx),Math.abs(dy))<20){attack();return}if(Math.abs(dx)>Math.abs(dy))rot(dx>0?1:-1);else move(dy<0?0:2)});
+$('startBtn').onclick=()=>{try{AC=new (window.AudioContext||window.webkitAudioContext)()}catch(e){}newGame(newSeed())};
+setFace('idle');log('sys','Ожидание эфира…');chat('где стрим??');chat('она провалилась в комп, я видел',1);
+new ResizeObserver(resize).observe($('view'));if(document.fonts)document.fonts.ready.then(resize);resize();
+})();
+</script>
