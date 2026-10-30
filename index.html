@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ru" data-vhs="on">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <meta name="theme-color" content="#f3efe2">
+  <title>Рабочий стол-пинбол</title>
+</head>
+<body>
+  <div class="app" id="app">
+    <div class="col left">
+      <section class="win cam">
+        <div class="ttl">● LIVE cam.exe <span class="sp"></span><b id="camViewers">0</b>&nbsp;👁</div>
+        <pre class="face crt" id="face" aria-label="Стримерша"></pre>
+        <div class="say" id="say">«Чат, я тут! Сейчас начнём.»</div>
+      </section>
+      <section class="win chat">
+        <div class="ttl">chat.log</div>
+        <div class="log" id="log" aria-live="off"></div>
+      </section>
+    </div>
+
+    <section class="win game">
+      <div class="ttl">desktop.exe <span class="sp"></span>сид <b id="seed">—</b>&nbsp;·&nbsp;раунд <b id="round">1</b>/<span id="rounds">4</span></div>
+      <div class="view" id="view">
+        <canvas id="board" aria-label="Рабочий стол: доска для монеток"></canvas>
+        <div class="tally crt" id="tally" hidden></div>
+        <div class="banner" id="banner" hidden></div>
+        <div class="over" id="over"></div>
+      </div>
+      <div class="taskbar">
+        <span class="tstart">ПУСК</span>
+        <span class="hint" id="hint">Тапни по столу — монетка полетит оттуда</span>
+        <span class="tray"><span class="rec">●</span> <span id="clock">00:00</span></span>
+      </div>
+    </section>
+
+    <div class="col right">
+      <section class="win air">
+        <div class="ttl">эфир</div>
+        <div class="goal">
+          <div class="big crt"><b id="viewers">0</b><span class="of">/ <span id="target">50</span> 👁</span></div>
+          <div class="bar"><i id="bar"></i></div>
+          <div class="near" id="near"></div>
+        </div>
+        <div class="rows">
+          <div><span>броски</span><b id="throws" class="dots">●●●●●</b></div>
+          <div><span>бросок</span><b id="cur">—</b></div>
+          <div><span>донаты</span><b id="donats">◈ 0</b></div>
+          <div><span>кот</span><b id="cat" class="catbar">□□□□□□</b></div>
+          <div><span>рекорд</span><b id="best">0</b></div>
+        </div>
+      </section>
+      <section class="win pult">
+        <div class="ttl">пульт</div>
+        <div class="pad">
+          <button class="main" id="go">▶ БРОСОК</button>
+          <button id="snd" aria-label="Звук">♪ вкл</button>
+          <button id="vhsBtn" aria-label="VHS-фильтр">VHS вкл</button>
+          <button id="restart" class="wide">↻ новый эфир</button>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <div class="vhs" id="vhs" aria-hidden="true"></div>
+
+  <div class="rotate" id="rotate">
+    <pre> .------.      .-----------.
+ | .--. |  --> | .-------. |
+ | |  | |      | |       | |
+ | '--' |      | '-------' |
+ |  ()  |      '-----------'
+ '------'</pre>
+    <p>Поверни телефон горизонтально: эфир идёт в альбомном формате.</p>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
